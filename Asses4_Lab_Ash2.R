@@ -1,7 +1,6 @@
 #~~~~~~~~~~~
 # Libraries
 #~~~~~~~~~~
-library(tibble)
 library(dplyr)
 library(ggplot2)
 library(tidyr)
@@ -17,21 +16,11 @@ scale_colour_manual(values=colour_pallette::black_pal)
 #~~~~~~~~~~~~
 # Thresholds (out of bounds)
 #~~~~~~~~~~~
-Thresh.Brix.min <- 15
-Thresh.Brix.max <- 30
-
-Thresh.Pol.min <- 50
-Thresh.Pol.max <- 105
-ExpectedBrix.delta <- 1
-
-Thresh.Fibre.min <- 4
-Thresh.Fibre.max <- 25
-Thresh.Fibre.delta <- .25
-
 Thresh.Ash.min <- 0
 Thresh.Ash.max <- 8
-
-
+#~~~~~~~~~~~~
+# Input file
+#~~~~~~~~~~~
 csv <- "Data/Raw1/Lab_Ash_Weights.csv"
 Lab_Ash_Data <- read.csv(csv, header=T, sep=",", dec=".")
 #~~~~~~~~~~~
@@ -55,4 +44,9 @@ Lab_Ash <- Lab_Ash_Calculated %>%
   summarise(Ash = mean(Ash)) %>%
   select(LabID, Ash)
 
-write.csv(Lab_Ash, "Data/aggregated_formatted4/Lab_Ash.csv")
+#~~~~~~~~~~
+# Write to output to directory
+#~~~~~~~~~
+write.table(Lab_Ash, file = "Data/aggregated_formatted4/Lab_Ash.csv", append = FALSE, quote = TRUE, sep = ",",
+            eol = "\n", na = "NA", dec = ".", row.names = FALSE, col.names = TRUE,
+            qmethod = c("escape", "double"), fileEncoding = "")
