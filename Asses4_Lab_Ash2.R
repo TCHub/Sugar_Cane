@@ -32,7 +32,7 @@ Thresh.Ash.min <- 0
 Thresh.Ash.max <- 8
 
 
-csv <- "Data/Raw1/Sugar_Cane_Input_Files/Lab_Ash_Weights.csv"
+csv <- "Data/Raw1/Lab_Ash_Weights.csv"
 Lab_Ash_Data <- read.csv(csv, header=T, sep=",", dec=".")
 #~~~~~~~~~~~
 # Filter out zero data, find InitialWeight and FinalWeight and 

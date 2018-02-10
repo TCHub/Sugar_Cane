@@ -33,7 +33,7 @@ Thresh.Ash.max <- 8
 #~~~~~~~~~~~
 # Input files
 #~~~~~~~~~~
-csv <- "Data/Sugar_Cane_Input_Files/Lab_Fibre_Weights.csv"
+csv <- "Data/Raw1/Lab_Fibre_Weights.csv"
 Lab_Fibre_Data <- read.csv(csv, header=T, sep=",", dec=".")
 #~~~~~~~~~~~
 # Check for missing values
