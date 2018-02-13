@@ -50,6 +50,10 @@ NIRData$DateTime <- as.POSIXct(NIRData$DateTime, format = "%Y-%m-%d%H:%M:%S")
 #~~~~~~~~~~~
 NIRData <- NIRData %>%
   transform(ScanID, LabID = floor(ScanID))
+#~~~~~~~~~~~~
+# Show first 15 rows of "ScanID" and "LabID"
+#~~~~~~~~~~~
+NIRData[1:15, c("ScanID", "LabID")]
 
 #~~~~~~~~~~~~
 # Use a PIPE to sequentially filter the NIR data by filtering out any 
@@ -64,7 +68,7 @@ NIRData <- NIRData %>%
 # - Inside Max and Min for NIR_Pol, Brix, Fibre and Ash
 # - ScanID <= 0
 #~~~~~~~~~~
-NIRData <- NIRData %>%
+NIRData_Filtered <- NIRData %>%
   filter(GH < Thresh.GH) %>%
   filter(NH < Thresh.NH) %>%
   filter(NIR_Pol > Thresh.Pol.min) %>%
@@ -75,5 +79,36 @@ NIRData <- NIRData %>%
   filter(NIR_Fibre < Thresh.Fibre.max) %>%
   filter(NIR_Ash > Thresh.Ash.min) %>%
   filter(NIR_Ash < Thresh.Ash.max) %>%
-  filter(ScanID <= 0)
-  
+  filter(ScanID >= 0)
+
+#~~~~~~~~~~~~
+# Use a PIPE with the  grouped_by() and summarize() functions on the
+# NIRData_Filtered table to produce a data table called NIR_Final which
+# is grouped by LabID and contains, in addition to the grouped variable,
+# the first DateTime for each group as well as the corresponding mean 
+# values for Pol, Brix, Fibre and Ash (i.e. the group means). Hint: 
+# the min() function returns the earliest date/time when applied to
+# a date/time type variable. Enter your R code you used then enter
+# the first fifteen rows of the updated NIR_Final table:
+#~~~~~~~~~~~  
+#~~~~~~~~~~~~
+# Group by LabID
+# Find the minimun DateTime 
+# Find the mean of NIR_Pol NIR_Brix, NIR_Fibre and NIR_Ash
+#~~~~~~~~~~~
+NIR_Final <- NIRData_Filtered %>%
+  group_by(LabID) %>%
+  summarize(DateTime = min(DateTime), NIR_Pol = mean(NIR_Pol),
+            NIR_Brix = mean(NIR_Brix), NIR_Ash = mean(NIR_Ash),
+            NIR_Fibre = mean(NIR_Fibre))
+
+#~~~~~~~~~~~~
+# Show First 15 rows
+#~~~~~~~~~~~
+NIR_Final[1:15, ]
+#~~~~~~~~~~
+# Write to disk
+#~~~~~~~~~
+write.table(NIR_Final, file = "output/NIR_Final.csv", append = FALSE, quote = TRUE, sep = ",",
+            eol = "\n", na = "NA", dec = ".", row.names = FALSE, col.names = TRUE,
+            qmethod = c("escape", "double"), fileEncoding = "")
